@@ -1,8 +1,7 @@
-import java.util.Random;
+
 import java.util.Scanner;
 
 class JogoDaVelha {
-
     private Jogador jogador1;
     private Jogador jogador2;
     private Tabuleiro tabuleiro;
@@ -16,38 +15,20 @@ class JogoDaVelha {
     public void iniciar() {
         Scanner scan = new Scanner(System.in);
 
-        System.out.print("Digite seu nome: ");
-        String nome = scan.nextLine();
-        System.out.print("\n");
+        JogadorHumano jogadorHumano = new JogadorHumano('X');
+        JogadorMaquina  jogadorMaquina = new JogadorMaquina('O');
 
-        char simboloEscolhido = ' ';
+        String nome = jogadorHumano.obterNome();
 
-        while (simboloEscolhido != 'X' && simboloEscolhido != 'O') {
-            System.out.print("Digite qual simbolo ('X' ou 'O') quer usar: ");
-            simboloEscolhido = scan.nextLine().charAt(0);
+        char simboloEscolhido = jogadorHumano.obterSimbolo();
 
-            if (simboloEscolhido != 'X' && simboloEscolhido != 'O') {
-                System.out.println("Digite um simbolo válido");
-            }
-
-            System.out.print("\n");
-        }
-
-        char simboloNaoEscolhido;
-
-        if (simboloEscolhido == 'X') {
-            simboloNaoEscolhido = 'O';
-        } else {
-            simboloNaoEscolhido = 'X';
-        }
+        char simboloNaoEscolhido = jogadorMaquina.obterSimbolo(simboloEscolhido);
 
         this.jogador1 = new JogadorHumano(simboloEscolhido);
         this.jogador2 = new JogadorMaquina(simboloNaoEscolhido);
 
         int linha = -1;
         int coluna = -1;
-
-        Random random = new Random();
 
         String jogadorAtual = "";
 
@@ -58,30 +39,8 @@ class JogoDaVelha {
             System.out.print("\n");
 
             do {
-                linha = -1;
-                coluna = -1;
-
-                while (linha < 0 || linha > 2) {
-                    System.out.print("Digite a linha (0,1,2): ");
-                    linha = scan.nextInt();
-
-                    if (linha < 0 || linha > 2) {
-                        System.out.println("Digite um número válido");
-                    }
-
-                    System.out.print("\n");
-                }
-
-                while (coluna < 0 || coluna > 2) {
-                    System.out.print("Digite a coluna (0,1,2): ");
-                    coluna = scan.nextInt();
-
-                    if (coluna < 0 || coluna > 2) {
-                        System.out.println("Digite um número válido");
-                    }
-
-                    System.out.print("\n");
-                }
+                linha = jogadorHumano.obterLinha();
+                coluna = jogadorHumano.obterColuna();
 
                 jogadorAtual = nome;
 
@@ -94,12 +53,12 @@ class JogoDaVelha {
             }
 
             do {
-                linha = random.nextInt(0, 3);
-                coluna = random.nextInt(0, 3);
+                linha = jogadorMaquina.obterLinha();
+                coluna = jogadorMaquina.obterColuna();
 
                 jogadorAtual = "Bot";
 
-            } while (!tabuleiro.jogar(jogador2, linha, coluna, "Bot", false));
+            } while (!tabuleiro.jogar(jogador2, linha, coluna, jogadorAtual, false));
 
             partida++;
         }
@@ -109,6 +68,8 @@ class JogoDaVelha {
         } else {
             System.out.println("O jogo terminou empatado.");
         }
+
+        System.out.println("Gabriel Giovanini");
     }
 
     public static void main(String[] args) {
